@@ -198,7 +198,7 @@
       "<div></div>"))
    ))
 
-(tm-define (test_24_11)
+(tm-define (24_11)
   (run-tests tests)
   (check-report)
   (display "Test suite of 24_11 end\n"))
