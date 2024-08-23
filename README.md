@@ -4,7 +4,7 @@
 ## How to develop
 First of all, you need to learn about the TEXMACS_HOME_PATH:
 ```
-cd $TEXMACS_HOME_PLUGIN/plugin
+cd $TEXMACS_HOME_PATH/plugins
 git clone git@github.com:XmacsLabs/html.git
 ```
 
