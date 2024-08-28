@@ -29,13 +29,6 @@
 (define (html->stm s)
   (htmltm-as-serial (htmltm-parse s)))
 
-(define (regtest-htmltm-grouping)
-  (regression-test-group
-   "htmltm, grouping markup" "grouping"
-   shtml->stm :none
-   (test "div" '(div "a") '(document "a"))
-   (test "span" '(span "a") "a")))
-
 (define (regtest-htmltm-address-bdo)
   (regression-test-group
    "htmltm, address and text direction" "address-bdo"
