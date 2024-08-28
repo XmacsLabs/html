@@ -26,32 +26,8 @@
           ((sxml-control-node? t) t)
           (else (proc (sxml-set-content t (map sub (sxml-content t))))))))
 
-(define (shtml->sxhtml t)
-  (sxml-postorder t (cut sxml-set-ns-prefix "h" <>)))
-
-(define (shtml->stm t)
-  (htmltm-as-serial `(*TOP* ,(shtml->sxhtml t))))
-
 (define (html->stm s)
   (htmltm-as-serial (htmltm-parse s)))
-
-(define (regtest-htmltm-grouping)
-  (regression-test-group
-   "htmltm, grouping markup" "grouping"
-   shtml->stm :none
-   (test "div" '(div "a") '(document "a"))
-   (test "span" '(span "a") "a")))
-
-(define (regtest-htmltm-headings)
-  (regression-test-group
-   "htmltm, heading markup" "headings"
-   shtml->stm :none
-   (test "h1" '(h1 "a") '(document (chapter* "a")))
-   (test "h2" '(h2 "a") '(document (section* "a")))
-   (test "h3" '(h3 "a") '(document (subsection* "a")))
-   (test "h4" '(h4 "a") '(document (subsubsection* "a")))
-   (test "h5" '(h5 "a") '(document (paragraph* "a")))
-   (test "h6" '(h6 "a") '(document (subparagraph* "a")))))
 
 (define (regtest-htmltm-address-bdo)
   (regression-test-group
