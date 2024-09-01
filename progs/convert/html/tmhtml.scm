@@ -939,16 +939,28 @@
       (string->number str)))
 
 (define (tmhtml-with-font-size val arg)
-  (ahash-with tmhtml-env :mag val
-    (let* ((x (* (font-size-string->number val) 100))
-           (c (string-append "font-size: " (number->string x) "%"))
-           (s (cond ((< x 1) "-4") ((< x 55) "-4") ((< x 65) "-3")
-                    ((< x 75) "-2") ((< x 95) "-1") ((< x 115) "0")
-                    ((< x 135) "+1") ((< x 155) "+2") ((< x 185) "+3")
-                    ((< x 225) "+4") ((< x 500) "+5") (else "+5"))))
-      (cond (tmhtml-css? `((h:font (@ (style ,c)) ,@(tmhtml arg))))
-            (s `((h:font (@ (size ,s)) ,@(tmhtml arg))))
-            (else (tmhtml arg))))))
+  ; (display "called with val: ") (display val) (newline)
+  ; (display "called with arg: ") (display arg) (newline)
+  (let* (
+         ;; Attempt to retrieve the base font size from the environment
+         (font-base-size-str (ahash-ref tmhtml-env :font-base-size))
+         ;; Use default value 10 if not defined
+         (font-base-size (if font-base-size-str
+                             (font-size-string->number font-base-size-str)
+                             10))
+         ;; Convert the input target font size to a number
+         (target-font-size (font-size-string->number val))
+         ;; Prevent division by zero and ensure the result is a floating-point number
+         (computed-size (if (> font-base-size 0)
+                            (* (/ (exact->inexact target-font-size) (exact->inexact font-base-size)) 100)
+                            100))
+         ;; Generate font-size style string
+         (font-size-style (string-append "font-size: " (number->string computed-size) "%;"))
+        )
+    (display "Computed font size percentage: ") (display computed-size) (display "%") (newline)
+    (display "Generated font-size style: ") (display font-size-style) (newline)
+    ;; Recursively process arg and apply the style
+    `((h:span (@ (style ,font-size-style)) ,@(tmhtml arg)))))
 
 (define (tmhtml-with-block style arg)
   (with r (tmhtml (blockify arg))
@@ -985,12 +997,20 @@
 
 (define (tmhtml-with-one var val arg)
   (cond ((logic-ref tmhtml-with-cmd% (list var val)) =>
-         (lambda (w) (list (append w (tmhtml arg)))))
+         (lambda (w)
+          ;  (display (string-append "tmhtml-with-one: match (var, val) = (" var ", " val ")\n"))
+           (list (append w (tmhtml arg)))))
         ((logic-ref tmhtml-with-cmd% (list var)) =>
-         (lambda (x) (ahash-with tmhtml-env x val (tmhtml arg))))
+         (lambda (x)
+           (display (string-append "tmhtml-with-one: match var = " var "\n"))
+           (ahash-with tmhtml-env x val (tmhtml arg))))
         ((logic-ref tmhtml-with-cmd% var) =>
-         (lambda (h) (h val arg)))
-        (else (tmhtml arg))))
+         (lambda (h)
+          ;  (display (string-append "tmhtml-with-one: match with var only, var = " var ", val = " val "\n"))
+           (h val arg)))
+        (else
+        ;  (display "tmhtml-with-one: no match found, processing arg directly\n")
+         (tmhtml arg))))
 
 (define (tmhtml-force-string x)
   (cond ((string? x) x)
@@ -1014,6 +1034,7 @@
          (let* ((var (tmhtml-force-string (car l)))
                 (val (tmhtml-force-string (cadr l)))
                 (next (cddr l)))
+          ;  (display (string-append "tmhtml-with: var = " var ", val = " val "\n"))
            (tmhtml-with-one var val `(with ,@next))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -2097,7 +2118,7 @@
   ("mode" ,tmhtml-with-mode)
   ("math-display" ,tmhtml-with-math-display)
   ("color" ,tmhtml-with-color)
-  ("font-size" ,tmhtml-with-font-size)
+  ("font-base-size" ,tmhtml-with-font-size)
   ("par-left" ,tmhtml-with-par-left)
   ("par-right" ,tmhtml-with-par-right)
   ("par-first" ,tmhtml-with-par-first)
