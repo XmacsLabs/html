@@ -10,8 +10,8 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-modules (convert html tmhtml))
-; (load (string-append (system-getenv "TEXMACS_HOME_PATH") "/plugins/html/progs/convert/html/tmhtml.scm"))
+; (use-modules (convert html tmhtml))
+(load (string-append (system-getenv "TEXMACS_HOME_PATH") "/plugins/html/progs/convert/html/tmhtml.scm"))
 (import (liii check))
 
 ;; Mock environment for testing
@@ -42,6 +42,6 @@
 )
 
 ;; Run all font size tests
-(define (test_font-size-test)
+(tm-define (font-size-test)
   (test-font-size)
   (check-report))
