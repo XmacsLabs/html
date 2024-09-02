@@ -957,8 +957,8 @@
          ;; Generate font-size style string
          (font-size-style (string-append "font-size: " (number->string computed-size) "%;"))
         )
-    (display "Computed font size percentage: ") (display computed-size) (display "%") (newline)
-    (display "Generated font-size style: ") (display font-size-style) (newline)
+    ; (display "Computed font size percentage: ") (display computed-size) (display "%") (newline)
+    ; (display "Generated font-size style: ") (display font-size-style) (newline)
     ;; Recursively process arg and apply the style
     `((h:span (@ (style ,font-size-style)) ,@(tmhtml arg)))))
 
@@ -1002,7 +1002,7 @@
            (list (append w (tmhtml arg)))))
         ((logic-ref tmhtml-with-cmd% (list var)) =>
          (lambda (x)
-           (display (string-append "tmhtml-with-one: match var = " var "\n"))
+          ;  (display (string-append "tmhtml-with-one: match var = " var "\n"))
            (ahash-with tmhtml-env x val (tmhtml arg))))
         ((logic-ref tmhtml-with-cmd% var) =>
          (lambda (h)
