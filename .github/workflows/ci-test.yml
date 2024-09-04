@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-        - main
+      - main
 
 jobs:
   test:
@@ -26,6 +26,14 @@ jobs:
         run: |
           wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.8/mogan-research-v1.2.8-debian12.deb -O /tmp/mogan-research.deb
           DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
+
+      - name: Create target directory
+        run: |
+          TARGET_DIR="$XDG_DATA_HOME/XmacsLabs/plugins/html"
+          echo "Creating target directory $TARGET_DIR"
+          mkdir -p "$TARGET_DIR"
+          echo "Target directory structure:"
+          ls -lR "$TARGET_DIR"
 
       - name: Copy repository contents to target folder
         run: |
