@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Install dependencies
         run: apt-get update && apt-get install -y wget git
-        
+
       - uses: actions/checkout@v3
         with:
           fetch-depth: 1
@@ -21,6 +21,11 @@ jobs:
         run: |
           wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.8/mogan-research-v1.2.8-debian12.deb -O /tmp/mogan-research.deb
           DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
+
+      - name: Copy repository contents to target folder
+        run: |
+          mkdir -p "$XDG_DATA_HOME/XmacsLabs/plugins/html"
+          rsync -a --exclude='.git' --exclude='*.deb' . "$XDG_DATA_HOME/XmacsLabs/plugins/html/"
 
       - name: Run all tests
         run: |
