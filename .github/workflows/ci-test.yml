@@ -27,18 +27,9 @@ jobs:
           wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.8/mogan-research-v1.2.8-debian12.deb -O /tmp/mogan-research.deb
           DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
 
-      - name: Remove existing content in target directory
-        run: |
-          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
-          echo "Removing existing content in $TARGET_DIR"
-          rm -rf "$TARGET_DIR"
-          mkdir -p "$TARGET_DIR"
-          echo "Target directory after removal:"
-          ls -l "$TARGET_DIR"
-
       - name: Copy repository contents to target folder
         run: |
-          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          TARGET_DIR="$XDG_DATA_HOME/XmacsLabs/plugins/html"
           echo "Copying repository contents to $TARGET_DIR"
           cp -r ./* "$TARGET_DIR/"
           cp -r ./.*/ "$TARGET_DIR/" || true
@@ -48,7 +39,7 @@ jobs:
       - name: Run all tests
         run: |
           echo "Running tests..."
-          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          TARGET_DIR="$XDG_DATA_HOME/XmacsLabs/plugins/html"
           for test_file in tests/*.scm; do
             echo "Testing $test_file"
             /usr/bin/MoganResearch --headless -b "$test_file" -x "$(basename "$test_file" .scm)" -q
