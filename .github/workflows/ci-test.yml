@@ -1,0 +1,47 @@
+name: CI for Running Tests
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    container: debian:bookworm
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install dependencies
+        run: |
+          apt-get update
+          apt-get install -y wget git
+
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Download and install MoganResearch
+        run: |
+          wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.9.1/mogan-research-v1.2.9.1-debian12.deb -O /tmp/mogan-research.deb
+          DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
+
+      - name: Remove existing content in target directory
+        run: |
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          rm -rf "$TARGET_DIR"
+          mkdir -p "$TARGET_DIR"
+
+      - name: Copy repository contents to target folder
+        run: |
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          cp -r ./* "$TARGET_DIR/"
+          cp -r ./.*/ "$TARGET_DIR/" || true
+
+      - name: Run all tests
+        run: |
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          for test_file in tests/*.scm; do
+            /usr/bin/MoganResearch --headless -b "$test_file" -x "($(basename "$test_file" .scm))" -q
+          done
