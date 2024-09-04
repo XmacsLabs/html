@@ -16,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           apt-get update
-          apt-get install -y wget git rsync
+          apt-get install -y wget git
 
       - uses: actions/checkout@v3
         with:
@@ -30,7 +30,8 @@ jobs:
       - name: Copy repository contents to target folder
         run: |
           mkdir -p "$XDG_DATA_HOME/XmacsLabs/plugins/html"
-          rsync -a --exclude='.git' --exclude='*.deb' . "$XDG_DATA_HOME/XmacsLabs/plugins/html/"
+          cp -r ./* "$XDG_DATA_HOME/XmacsLabs/plugins/html/"
+          cp -r ./.*/ "$XDG_DATA_HOME/XmacsLabs/plugins/html/" || true
 
       - name: Run all tests
         run: |
