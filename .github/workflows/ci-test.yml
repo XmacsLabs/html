@@ -6,7 +6,7 @@ on:
       - main
   pull_request:
     branches:
-      - main
+        - main
 
 jobs:
   test:
@@ -24,33 +24,31 @@ jobs:
 
       - name: Download and install MoganResearch
         run: |
-          wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.8/mogan-research-v1.2.8-debian12.deb -O /tmp/mogan-research.deb
+          wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.9.1/mogan-research-v1.2.9.1-debian12.deb -O /tmp/mogan-research.deb
           DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
 
-      - name: Create target directory
+      - name: Remove existing content in target directory
         run: |
-          TARGET_DIR="$XDG_DATA_HOME/XmacsLabs/plugins/html"
-          echo "Creating target directory $TARGET_DIR"
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          echo "Removing existing content in $TARGET_DIR"
+          rm -rf "$TARGET_DIR"
           mkdir -p "$TARGET_DIR"
-          TARGET_DIR_ABS=$(realpath "$TARGET_DIR")
-          echo "Target directory structure:"
-          ls -lR "$TARGET_DIR_ABS"
+          echo "Target directory after removal:"
+          ls -l "$TARGET_DIR"
 
       - name: Copy repository contents to target folder
         run: |
-          TARGET_DIR="$XDG_DATA_HOME/XmacsLabs/plugins/html"
-          TARGET_DIR_ABS=$(realpath "$TARGET_DIR")
-          echo "Copying repository contents to $TARGET_DIR_ABS"
-          cp -r ./* "$TARGET_DIR_ABS/"
-          cp -r ./.*/ "$TARGET_DIR_ABS/" || true
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          echo "Copying repository contents to $TARGET_DIR"
+          cp -r ./* "$TARGET_DIR/"
+          cp -r ./.*/ "$TARGET_DIR/" || true
           echo "Contents of the target directory after copying:"
-          ls -lR "$TARGET_DIR_ABS"
+          ls -lR "$TARGET_DIR"
 
       - name: Run all tests
         run: |
           echo "Running tests..."
-          TARGET_DIR="$XDG_DATA_HOME/XmacsLabs/plugins/html"
-          TARGET_DIR_ABS=$(realpath "$TARGET_DIR")
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
           for test_file in tests/*.scm; do
             echo "Testing $test_file"
             /usr/bin/MoganResearch --headless -b "$test_file" -x "$(basename "$test_file" .scm)" -q
