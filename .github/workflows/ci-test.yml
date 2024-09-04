@@ -1,0 +1,29 @@
+name: CI for Running Tests
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    container: debian:bookworm
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Install dependencies
+        run: apt-get update && apt-get install -y wget git
+        
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 1
+
+      - name: Download and install MoganResearch
+        run: |
+          wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.8/mogan-research-v1.2.8-debian12.deb -O /tmp/mogan-research.deb
+          DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
+
+      - name: Run all tests
+        run: |
+          for test_file in tests/*.scm; do
+            /usr/bin/MoganResearch --headless -b "$test_file" -x "$(basename "$test_file" .scm)" -q
+          done
