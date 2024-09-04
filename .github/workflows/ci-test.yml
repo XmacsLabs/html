@@ -29,22 +29,26 @@ jobs:
 
       - name: Remove existing content in target directory
         run: |
-          echo "Removing existing content in $XDG_DATA_HOME/XmacsLabs/plugins/html"
-          rm -rf "$XDG_DATA_HOME/XmacsLabs/plugins/html/*"
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          echo "Removing existing content in $TARGET_DIR"
+          rm -rf "$TARGET_DIR"
+          mkdir -p "$TARGET_DIR"
           echo "Target directory after removal:"
-          ls -l "$XDG_DATA_HOME/XmacsLabs/plugins/html"
+          ls -l "$TARGET_DIR"
 
       - name: Copy repository contents to target folder
         run: |
-          echo "Copying repository contents to $XDG_DATA_HOME/XmacsLabs/plugins/html"
-          cp -r ./* "$XDG_DATA_HOME/XmacsLabs/plugins/html/"
-          cp -r ./.*/ "$XDG_DATA_HOME/XmacsLabs/plugins/html/" || true
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
+          echo "Copying repository contents to $TARGET_DIR"
+          cp -r ./* "$TARGET_DIR/"
+          cp -r ./.*/ "$TARGET_DIR/" || true
           echo "Contents of the target directory after copying:"
-          ls -lR "$XDG_DATA_HOME/XmacsLabs/plugins/html"
+          ls -lR "$TARGET_DIR"
 
       - name: Run all tests
         run: |
           echo "Running tests..."
+          TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
           for test_file in tests/*.scm; do
             echo "Testing $test_file"
             /usr/bin/MoganResearch --headless -b "$test_file" -x "$(basename "$test_file" .scm)" -q
