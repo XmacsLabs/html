@@ -27,14 +27,27 @@ jobs:
           wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.8/mogan-research-v1.2.8-debian12.deb -O /tmp/mogan-research.deb
           DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
 
-      - name: Copy repository contents to target folder
+      - name: Debug MoganResearch installation
         run: |
+          echo "MoganResearch installation path:"
+          which MoganResearch || echo "MoganResearch not found"
+          echo "Contents of /usr/bin:"
+          ls -l /usr/bin | grep MoganResearch
+
+      - name: Debug repository contents
+        run: |
+          echo "Contents of the root directory:"
+          ls -l
+          echo "Contents of the target directory:"
           mkdir -p "$XDG_DATA_HOME/XmacsLabs/plugins/html"
           cp -r ./* "$XDG_DATA_HOME/XmacsLabs/plugins/html/"
           cp -r ./.*/ "$XDG_DATA_HOME/XmacsLabs/plugins/html/" || true
+          ls -lR "$XDG_DATA_HOME/XmacsLabs/plugins/html"
 
       - name: Run all tests
         run: |
+          echo "Running tests..."
           for test_file in tests/*.scm; do
+            echo "Testing $test_file"
             /usr/bin/MoganResearch --headless -b "$test_file" -x "$(basename "$test_file" .scm)" -q
           done
