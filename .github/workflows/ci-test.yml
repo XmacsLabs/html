@@ -43,5 +43,5 @@ jobs:
         run: |
           TARGET_DIR="/github/home/.local/share/XmacsLabs/plugins/html"
           for test_file in tests/*.scm; do
-            /usr/bin/MoganResearch --headless -b "$test_file" -x "$(basename "$test_file" .scm)" -q
+            /usr/bin/MoganResearch --headless -b "$test_file" -x "($(basename "$test_file" .scm))" -q
           done
