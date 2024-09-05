@@ -1,0 +1,24 @@
+<TMU|<tuple|1.0.3|1.2.9.1>>
+
+<style|generic>
+
+<\body>
+  <choice|<tformat|<table|<row|<cell|x\<leqslant\>3>>|<row|<cell|2*x-y-2\<geqslant\>0>>|<row|<cell|3*x+y-8\<geqslant\>0>>>>>
+
+  <math|<choice|<tformat|<table|<row|<cell|x\<leqslant\>3>>|<row|<cell|2*x-y-2\<geqslant\>0>>|<row|<cell|3*x+y-8\<geqslant\>0>>>>>>
+
+  \;
+
+  y=2*t*<sqrt|1-t<rsup|2>>
+
+  <math|y=2*t*<sqrt|1-t<rsup|2>>>
+
+  \;
+</body>
+
+<\initial>
+  <\collection>
+    <associate|page-medium|paper>
+    <associate|page-screen-margin|false>
+  </collection>
+</initial>
