@@ -212,7 +212,8 @@
          ;; Use a single string for the JavaScript code block
          (js-inline `((h:script (@ (type "text/javascript"))
                                 "(function () {\"use strict\"; window.addEventListener(\"load\", function () { var box, div, link, namespaceURI; namespaceURI = 'http://www.w3.org/1998/Math/MathML'; if (document.body.getElementsByTagNameNS(namespaceURI, 'math')[0]) { document.body.insertAdjacentHTML('afterbegin', '<div style=\\\"border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;\\\"><math xmlns=\\\"' + namespaceURI + '\\\"><mspace height=\\\"23px\\\" width=\\\"77px\\\"></mspace></math></div>'); div = document.body.firstChild; box = div.firstChild.firstChild.getBoundingClientRect(); document.body.removeChild(div); if (Math.abs(box.height - 23) > 1 || Math.abs(box.width - 77) > 1) { link = document.createElement('link'); link.href = 'https://fred-wang.github.io/mathml.css/mathml.css'; link.rel = 'stylesheet'; document.head.appendChild(link); } } }); })();")))
-         (scripts `((h:script (@ (type "text/javascript")))))
+         (scripts `((h:script (@ (type "text/javascript")))
+         (h:script "document.querySelectorAll('style').forEach(style => style.remove());")))
          (body (append scripts (tmhtml doc))))
     
     (set! title
