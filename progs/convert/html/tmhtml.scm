@@ -140,46 +140,66 @@
   ;; TODO: return only used CSS properties
   (let ((html
          (string-append
-          "body { text-align: justify } "
-          "h5 { display: inline; padding-right: 1em } "
-          "h6 { display: inline; padding-right: 1em } "
-          "table { border-collapse: collapse } "
-          "td { padding: 0.2em; vertical-align: baseline } "
-          "dt { float: left; min-width: 1.75em; text-align: right; "
-          "padding-right: 0.75em; font-weight: bold; } "
-          "dd { margin-left: 2.75em; padding-bottom: 0.25em; } "
-          "dd p { padding-top: 0em; } "
-          ".subsup { display: inline; vertical-align: -0.2em } "
-          ".subsup td { padding: 0px; text-align: left} "
-          ".fraction { display: inline; vertical-align: -0.8em } "
-          ".fraction td { padding: 0px; text-align: center } "
-          ".wide { position: relative; margin-left: -0.4em } "
-          ".accent { position: relative; margin-left: -0.4em; top: -0.1em } "
-          ".title-block { width: 100%; text-align: center } "
-          ".title-block p { margin: 0px } "
-          ".compact-block p { margin-top: 0px; margin-bottom: 0px } "
-          ".left-tab { text-align: left } "
-          ".center-tab { text-align: center } "
-          ".balloon-anchor { border-bottom: 1px dotted #000000; outline: none;"
-          " cursor: help; position: relative; } "
-          ".balloon-anchor [hidden] { margin-left: -999em; position: absolute;"
-          " display: none; } "
-          ".balloon-anchor: hover [hidden] { position: absolute; left: 1em;"
-          " top: 2em; z-index: 99; margin-left: 0;"
-          " width: 500px; display: inline-block; } "
-          ".balloon-body { } "
-          ".ornament { border-width: 1px; border-style: solid;"
-          " border-color: black; display: inline-block; padding: 0.2em; } "
-          ".right-tab { float: right; position: relative; top: -1em; } "
-       ".no-breaks { white-space: nowrap; } "
-    ".underline { text-decoration: underline; } "
-    ".overline { text-decoration: overline; } "
-    ".strike-through { text-decoration: line-through; } "
-    "del { text-decoration: line-through wavy red; } "
-    ".fill-out { text-decoration: underline dotted; } "
-    ))  
-  (mathml "math { font-family: cmr, times, verdana } "))
-    (if tmhtml-mathml? (string-append html mathml) html)))
+          "math { display: inline; text-indent: 0; } "
+          "math[display='block'], math[mode='display'] { display: block; text-align: center; } "
+          "mfrac { display: inline-block !important; vertical-align: -50%; border-collapse: collapse; text-align: center !important; } "
+          "mfrac > * { display: block !important; } "
+          "mfrac > * + * { display: inline-block !important; vertical-align: top; } "
+          "mfrac:not([linethickness='0']) > *:first-child { border-bottom: solid thin; } "
+          "msub > *:nth-child(2), msubsup > *:nth-child(2), mmultiscripts > *:nth-child(2n+2), "
+          "mmultiscripts > mprescripts ~ *:nth-child(2n+3) { font-size: 0.8em; vertical-align: sub; } "
+          "msup > *:nth-child(2), msubsup > *:nth-child(3), mmultiscripts > *:nth-child(2n+3), "
+          "mmultiscripts > mprescripts ~ *:nth-child(2n+2) { font-size: 0.8em; vertical-align: super; } "
+          "mprescripts:after { content: ';'; } "
+          "munder, mover, munderover { display: inline-flex !important; flex-direction: column; } "
+          "munder > *:nth-child(2), munderover > *:nth-child(2) { font-size: 0.8em; order: +1; } "
+          "mover > *:nth-child(2), munderover > *:nth-child(3) { font-size: 0.8em; order: -1; } "
+          "munder { vertical-align: text-top; } "
+          "mover { vertical-align: text-bottom; } "
+          "munderover { vertical-align: middle; } "
+          "msqrt, mroot { display: inline-flex !important; margin-left: 0.5em; vertical-align: middle; border-top: solid thin; } "
+          "msqrt:before, mroot:before, menclose[notation='radical']:before { margin-left: -0.5em; content: '\\221A'; } "
+          "mroot > *:nth-child(2) { margin-right: 0.25em; margin-left: -0.75em; font-size: 0.8em; order: -1; } "
+          "menclose { display: inline-table !important; border-collapse: separate; border-spacing: 0.4ex 0; } "
+          "menclose[notation*='top'], menclose[notation*='actuarial'] { border-top: solid thin; } "
+          "menclose[notation*='bottom'], menclose[notation*='madruwb'] { border-bottom: solid thin; } "
+          "menclose[notation*='right'], menclose[notation*='actuarial'], menclose[notation*='madruwb'] { border-right: solid thin; } "
+          "menclose[notation*='left'] { border-left: solid thin; } "
+          "menclose[notation*='box'], menclose[notation*='roundedbox'], menclose[notation*='circle'] { border: solid thin; } "
+          "menclose[notation*='roundedbox'] { border-radius: 15%; } "
+          "menclose[notation*='circle'] { border-radius: 50%; } "
+          "menclose[notation*='strike'] { text-decoration: line-through; } "
+          "menclose[notation='radical'], menclose[notation*='longdiv'] { border-top: solid thin; margin-left: 0.5em; } "
+          "menclose[notation*='longdiv']::before { margin-left: -0.6em; content: '\\27CC'; } "
+          "menclose[notation*='phasorangle'] { border-bottom: solid thin; margin-left: 0.2em; } "
+          "menclose[notation*='phasorangle']::before { margin-left: -0.5em; position: relative; top: 0.45em; content: '\\2220'; } "
+          "mtable { display: inline-table !important; vertical-align: middle; text-align: center; } "
+          "mtr, mlabeledtr { display: table-row !important; } "
+          "mlabeledtr > mtd:first-child { display: none; } "
+          "mtd { display: table-cell !important; padding: 0 0.5ex; } "
+          "mtable[frame='solid'] { border-style: solid; } "
+          "mtable[frame='dashed'] { border-style: dashed; } "
+          "mtable[frame='none'] { border-style: none; } "
+          "mspace { margin: 0.2em; } "
+          "mi { font-style: italic; } "
+          "mo:not(:first-child):not(:last-child) { margin-right: 0.2em; margin-left: 0.2em; } "
+          "ms:before, ms:after { content: '\\0022'; } "
+          "ms[lquote]:before { content: attr(lquote); } "
+          "ms[rquote]:after { content: attr(rquote); } "
+          "[mathvariant='bold'], [mathvariant='bold-italic'], [mathvariant='bold-sans-serif'], [mathvariant='sans-serif-bold-italic'] { font-weight: bold; font-style: normal; } "
+          "[mathvariant='monospace'] { font-family: monospace; font-style: normal; } "
+          "[mathvariant='sans-serif'], [mathvariant='bold-sans-serif'], [mathvariant='sans-serif-italic'], [mathvariant='sans-serif-bold-italic'] { font-family: sans-serif; font-style: normal; } "
+          "[mathvariant='italic'], [mathvariant='bold-italic'], [mathvariant='sans-serif-italic'], [mathvariant='sans-serif-bold-italic'] { font-style: italic; } "
+          "[mathvariant='normal'] { font-style: normal; } "
+          "mphantom { visibility: hidden; } "
+          "merror { outline: solid thin red; } "
+          "merror:before { content: 'Error: '; } "
+          "semantics > *:first-child { display: inline; } "
+          "annotation, annotation-xml { font-family: monospace; display: none !important; } "
+          "math:active > semantics > *:first-child { display: none !important; } "
+          "math:active annotation:first-of-type { display: inline !important; } "
+         )))
+    html))
 
 (define (with-extract-sub w var post)
   (cond ((and (pair? w) (== (car w) 'with)
@@ -209,14 +229,12 @@
          (title (tmhtml-find-title doc))
          (css `(h:style (@ (type "text/css")) ,(tmhtml-css-header)))
          (xhead '())
-         ;; Add <script> tags and inline code (to override the original inline style)
-         (texmacs_path (url->string (get-texmacs-home-path)))
-         (js_path (string-append texmacs_path "/plugins/html/mspace.js"))
-         (scripts `((h:script (@ (type "text/javascript") (src ,js_path)))
-                    (h:script "document.querySelectorAll('style').forEach(style => style.remove());")))
+         ;; Use a single string for the JavaScript code block
+         (js-inline `((h:script (@ (type "text/javascript"))
+                                "(function () {\"use strict\"; window.addEventListener(\"load\", function () { var box, div, link, namespaceURI; namespaceURI = 'http://www.w3.org/1998/Math/MathML'; if (document.body.getElementsByTagNameNS(namespaceURI, 'math')[0]) { document.body.insertAdjacentHTML('afterbegin', '<div style=\\\"border: 0; clip: rect(0 0 0 0); height: 1px; margin: -1px; overflow: hidden; padding: 0; position: absolute; width: 1px;\\\"><math xmlns=\\\"' + namespaceURI + '\\\"><mspace height=\\\"23px\\\" width=\\\"77px\\\"></mspace></math></div>'); div = document.body.firstChild; box = div.firstChild.firstChild.getBoundingClientRect(); document.body.removeChild(div); if (Math.abs(box.height - 23) > 1 || Math.abs(box.width - 77) > 1) { link = document.createElement('link'); link.href = 'https://fred-wang.github.io/mathml.css/mathml.css'; link.rel = 'stylesheet'; document.head.appendChild(link); } } }); })();")))
+         (scripts `((h:script (@ (type "text/javascript")))))
          (body (append scripts (tmhtml doc))))
-    (set! tmhtml-site-version
-          (with-extract doc "html-site-version"))
+    
     (set! title
           (cond ((with-extract doc "html-title")
                  (with-extract doc "html-title"))
@@ -228,63 +246,24 @@
                  `(concat ,(tmhtml-force-string title)
                           " (FSF GNU project)"))
                 (else (tmhtml-force-string title))))
+
     (set! css
           (cond ((with-extract doc "html-css")
                  `(h:link (@ (rel "stylesheet")
                              (href ,(with-extract doc "html-css"))
                              (type "text/css"))))
                 (else css)))
-    (if (with-extract doc "html-head-javascript-src")
-        (let* ((src (with-extract doc "html-head-javascript-src"))
-               (script `(h:script (@ (language "javascript")
-                                     (src ,src)))))
-          (set! xhead (append xhead (list script)))))
-    (if (with-extract doc "html-head-javascript")
-        (let* ((code (with-extract doc "html-head-javascript"))
-               (script `(h:script (@ (language "javascript")) ,code)))
-          (set! xhead (append xhead (list script)))))
-    (if (with-extract doc "html-head-favicon")
-        (let* ((code (with-extract doc "html-head-favicon"))
-               (icon `(h:link (@ (rel "icon") (href ,code)))))
-          (set! xhead (append xhead (list icon)))))
-    (if (and (not (func? css 'h:link))
-             (string-ends? (get-preference "texmacs->html:css-stylesheet")
-                           ".css"))
-        (with src (get-preference "texmacs->html:css-stylesheet")
-          (with link-css `(h:link (@ (rel "stylesheet")
-                                     (href ,src)
-                                     (type "text/css")))
-            (set! xhead (append xhead (list link-css))))))
-    (if (tm-func? (with-extract* doc "html-extra-css") 'tuple)
-        (for (src (cdr (with-extract* doc "html-extra-css")))
-          (with link-css `(h:link (@ (rel "stylesheet")
-                                     (href ,src)
-                                     (type "text/css")))
-            (set! xhead (append xhead (list link-css))))))
-    (if (tm-func? (with-extract* doc "html-extra-javascript-src") 'tuple)
-        (for (src (cdr (with-extract* doc "html-extra-javascript-src")))
-          (with script `(h:script (@ (language "javascript")
-                                     (src ,src)
-                                     (defer "<implicit>")))
-            (set! xhead (append xhead (list script))))))
-    (if (tm-func? (with-extract* doc "html-extra-javascript") 'tuple)
-        (for (code (cdr (with-extract* doc "html-extra-javascript")))
-          (with script `(h:script (@ (language "javascript")
-                                     (defer "<implicit>")) ,code)
-            (set! xhead (append xhead (list script))))))
+
+    ;; Add your JS inline to the <head> section
+    (set! xhead (append xhead js-inline))
+
     (if tmhtml-mathjax?
         (let* ((site "https://cdn.jsdelivr.net/")
                (loc "npm/mathjax@3/es5/tex-mml-chtml.js")
                (src (string-append site loc))
                (script `(h:script (@ (language "javascript") (src ,src)))))
           (set! xhead (append xhead (list script)))))
-    (if (or (in? "tmdoc" styles)
-            (in? "tmweb" styles) (in? "tmweb2" styles)
-            (in? "mmxdoc" styles) (in? "magix-web" styles)
-            (in? "max-web" styles) (in? "node-web" styles))
-        (set! body (tmhtml-tmdoc-post body)))
-    (if tmhtml-css?
-        (set! body (tmhtml-css-post body)))
+
     `(h:html
       (h:head
        (h:title ,@(tmhtml title))
