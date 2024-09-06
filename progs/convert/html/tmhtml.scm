@@ -209,7 +209,12 @@
          (title (tmhtml-find-title doc))
          (css `(h:style (@ (type "text/css")) ,(tmhtml-css-header)))
          (xhead '())
-         (body (tmhtml doc)))
+         ;; Add <script> tags and inline code (to override the original inline style)
+         (texmacs_path (url->string (get-texmacs-home-path)))
+         (js_path (string-append texmacs_path "/plugins/html/mspace.js"))
+         (scripts `((h:script (@ (type "text/javascript") (src js_path)))
+                    (h:script "document.querySelectorAll('style').forEach(style => style.remove());")))
+         (body (append scripts (tmhtml doc))))
     (set! tmhtml-site-version
           (with-extract doc "html-site-version"))
     (set! title
