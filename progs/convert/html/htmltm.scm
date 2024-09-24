@@ -393,14 +393,21 @@
       (htmltm-tex-image (shtml-attr-non-null a 'alt))
       (htmltm-image env a c)))
 
-(define (htmltm-wikipedia-span env a c)
-  (cond ((== (shtml-attr-non-null a 'class) "mwe-math-element")
-         (if (and (pair? c) (func? (car c) 'h:span))
-             (htmltm env (car c))
-             (htmltm-pass env a c)))
-        ((== (shtml-attr-non-null a 'class) "texhtml")
-         (list `(math ,(htmltm-args-serial env c))))
-        (else (htmltm-pass env a c))))
+(define (htmltm-span env a c)
+  (with class-value (shtml-attr-non-null a 'class)
+    (cond ((== class-value "mwe-math-element")
+           (if (and (pair? c) (func? (car c) 'h:span))
+               (htmltm env (car c))
+               (htmltm-pass env a c)))
+          ((== class-value "texhtml")
+           (list `(math ,(htmltm-args-serial env c))))
+          ((and (== class-value "katex")
+                (pair? c)
+                (func? (car c) 'h:span)
+                (func? (second (car c)) '@)
+                (== (shtml-attr-non-null (cdr (second (car c))) 'class) "katex-mathml"))
+           (htmltm env (first c)))
+          (else (htmltm-pass env a c)))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Special rules for improving Scilab documentation rendering
@@ -462,7 +469,7 @@
   ;; Grouping
   (div  (handler :mixed :block  htmltm-pass))
   ;; TODO: convert 'align' attributes in div, p and headings
-  (span (handler :collapse :inline htmltm-wikipedia-span))
+  (span (handler :collapse :inline htmltm-span))
 
   ;; Headings
   (h1 (handler :mixed :block "chapter*"))
