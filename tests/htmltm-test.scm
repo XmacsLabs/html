@@ -15,8 +15,10 @@
 (import (liii check))
 
 (texmacs-module (convert html htmltm-test)
-  (:use (convert html htmltm) (convert tools xmltm)
-        (convert tools sxml) (convert tools sxhtml)))
+  (:use (convert html htmltm)
+        (convert data xmltm)
+        (convert data sxml)
+        (convert data sxhtml)))
 
 (define (sxml-postorder t proc)
   (let sub ((t t))
