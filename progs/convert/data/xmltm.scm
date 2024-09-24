@@ -11,9 +11,9 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(texmacs-module (convert tools xmltm)
-  (:use (convert tools stm) (convert tools sxml)
-	(convert tools environment) (convert tools tmconcat)))
+(texmacs-module (convert data xmltm)
+  (:use (convert tools stm) (convert data sxml)
+	      (convert tools environment) (convert tools tmconcat)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; XML namespace normalization

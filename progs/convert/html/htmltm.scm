@@ -13,11 +13,15 @@
 
 (texmacs-module (convert html htmltm)
   (:use
-    (convert tools tmlength) (convert tools tmcolor)
-    (convert tools old-tmtable) (convert tools stm)
-    (convert tools sxml)  (convert tools sxhtml)
+    (convert tools tmlength)
+    (convert tools tmcolor)
+    (convert tools old-tmtable)
+    (convert tools stm)
+    (convert data sxml)
+    (convert data sxhtml)
     (convert tools environment)
-    (convert tools xmltm) (convert mathml mathtm)))
+    (convert data xmltm)
+    (convert mathml mathtm)))
 
 (define (assoc-string-ci key alist)
   (list-find alist (lambda (pair) (string-ci=? key (car pair)))))
@@ -404,8 +408,9 @@
           ((and (== class-value "katex")
                 (pair? c)
                 (func? (car c) 'h:span)
-                (func? (second (car c)) '@)
-                (== (shtml-attr-non-null (cdr (second (car c))) 'class) "katex-mathml"))
+                (sxml-has-attr-list? (car c))
+                (== (shtml-attr-non-null (sxml-attr-list (car c)) 'class)
+                    "katex-mathml"))
            (htmltm env (first c)))
           (else (htmltm-pass env a c)))))
 
