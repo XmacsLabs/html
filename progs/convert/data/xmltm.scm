@@ -629,13 +629,13 @@
   ;; @x-pass (method) pass method
   ;; NOTE: method == (env attrlist content -> node-list)
   (cond ((string? t) (x-string env t))
-	((sxml-top-node? t) (x-pass env '() (sxml-content t)))
-	((sxml-control-node? t) '())
-	(else
-	 (receive (ns-id ncname) (sxml-split-name (sxml-name t))
-	   (cond ((sxml-meta-logic-ref ns-id (string->symbol ncname))
-		  => (cut <> env (sxml-attr-list t) (sxml-content t)))
-		 (else (x-pass env (sxml-attr-list t) (sxml-content t))))))))
+        ((sxml-top-node? t) (x-pass env '() (sxml-content t)))
+        ((sxml-control-node? t) '())
+        (else
+         (receive (ns-id ncname) (sxml-split-name (sxml-name t))
+           (cond ((and (not (string-null? ncname)) (sxml-meta-logic-ref ns-id (string->symbol ncname)))
+                  => (cut <> env (sxml-attr-list t) (sxml-content t)))
+                 (else (x-pass env (sxml-attr-list t) (sxml-content t))))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Special serial constructors

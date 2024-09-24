@@ -405,6 +405,7 @@
                (htmltm-pass env a c)))
           ((== class-value "texhtml")
            (list `(math ,(htmltm-args-serial env c))))
+          ; Kimi AI
           ((and (== class-value "katex")
                 (pair? c)
                 (func? (car c) 'h:span)
@@ -412,7 +413,17 @@
                 (== (shtml-attr-non-null (sxml-attr-list (car c)) 'class)
                     "katex-mathml"))
            (htmltm env (first c)))
-          (else (htmltm-pass env a c)))))
+          ; Zhihu
+          ((and (== class-value "MathJax_SVG")
+                (pair? c)
+                (func? (car c) 'h:svg))
+           (begin
+             (display (shtml-attr-non-null a 'data-mathml))
+             (newline)
+             (htmltm env (htmltm-parse (shtml-attr-non-null a 'data-mathml)))))
+          (else
+           (begin
+            (htmltm-pass env a c))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Special rules for improving Scilab documentation rendering
