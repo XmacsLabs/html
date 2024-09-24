@@ -416,10 +416,13 @@
           ; Zhihu
           ((and (== class-value "MathJax_SVG")
                 (pair? c)
-                (func? (car c) 'h:svg))
+                (func? (car c) 'h:svg)
+                (>= (length (car c)) 3)
+                (func? (third (car c)) 'h:g)
+                (>= (length (third (car c))) 3)
+                (func? (third (third (car c))) 'h:use))
            (begin
-             (display (shtml-attr-non-null a 'data-mathml))
-             (newline)
+             ; (display* "\n" (shtml-attr-non-null a 'data-mathml) "\n")
              (htmltm env (htmltm-parse (shtml-attr-non-null a 'data-mathml)))))
           (else
            (begin
