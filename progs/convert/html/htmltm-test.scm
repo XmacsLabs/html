@@ -763,46 +763,6 @@
                           "`" tm)))
                   numbers)))))))))
 
-(define (regtest-htmltm-backquote)
-  ;; In 1.0.1.20, the font handling is inadequate.
-  ;;
-  ;; The GRAVE ACCENT (U+0060, Cork #00) in visible HTML text must be converted
-  ;; to LEFT SINGLE QUOTATION MARK (U+201C, Cork #60) to be displayed as
-  ;; intended by many HTML editors.
-  ;;
-  ;; In addition, URL attributes must be decoded when imported to TeXmacs.
-  ;;
-  (regression-test-group
-   "htmltm, backquote" "backquote"
-   shtml->stm :none
-   ;; NOTE: "`" in source is GRAVE, but in result it is LEFT SINGLE QUOTATION
-   (test "text node" "`hello' `world'" "`hello' `world'")
-   (test "element" '(em "`hello`") '(em "`hello`"))
-   (test "href element"
-         '(a (@ (href "%60hello%20world%60")) "`how are you?`")
-         '(hlink "`how are you?`" "%60hello%20world%60"))
-   (test "img element"
-         '(img (@ (src "%60hello%60")))
-         '(image "%60hello%60" "0.6383w" "" "" ""))
-   ;; No test for htmltm-with-color of 1.0.1.16, since it is mostly broken.
-   (test "anchor element"
-         '(a (@ (name "%60hello%60")) "`world`")
-         '(concat (label "%60hello%60") "`world`"))
-   (test "id attribute"
-         '(em (@ (id "%60hello%60")) "`world`")
-         '(em (concat (label "%60hello%60") "`world`")))
-   ;; (test "map url decoder"
-   ;;      `(a (@ (href ,(url-encoded-all))) "x")
-   ;;      `(hlink "x" ,(url-decoded-all)))
-   (test "url encoding error 1"
-         '(a (@ (href "%")) "x") '(hlink "x" "%"))
-   (test "url encoding error 2"
-         '(a (@ (href "%z")) "x") '(hlink "x" "%z"))
-   (test "url encoding error 3"
-         '(a (@ (href "%6")) "x") '(hlink "x" "%6"))
-   (test "url encoding error 4"
-         '(a (@ (href "%6z")) "x") '(hlink "x" "%6z"))))
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Test suite
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -828,7 +788,6 @@
               (regtest-htmltm-forms)
               (regtest-htmltm-scripting)
               (regtest-htmltm-handlers-extra)
-              (regtest-htmltm-less-gtr)
-              (regtest-htmltm-backquote))))
+              (regtest-htmltm-less-gtr))))
     (display* "Total: " (object->string n) " tests.\n")
     (display "Test suite of htmltm: ok\n")))

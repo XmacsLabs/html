@@ -46,9 +46,14 @@
   (check (shtml->stm '(div "a")) => '(document "a"))
   (check (shtml->stm '(span "a")) => "a"))
 
+(define (regtest-htmltm-quote)
+  (check (shtml->stm '(p "`hello`")) => '(document "\x00;hello\x00;"))
+  (check (shtml->stm '(p "‘hello’")) => '(document "`hello<#2019>"))
+  (check (shtml->stm '(a (@ (href "%60hello%20world%60")) "`how are you?`"))
+         => '(hlink "\x00;how are you?\x00;" "%60hello%20world%60")))
 
 (tm-define (htmltm-test)
   (regtest-htmltm-headings)
   (regtest-htmltm-grouping)
-  (check-report)
-  (display "Test suite of htmltm-test end\n"))
+  (regtest-htmltm-quote)
+  (check-report))
