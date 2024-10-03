@@ -1,5 +1,5 @@
 # HTML Data plugin
-> based on Mogan Research v1.2.9.1-rc3 LTS
+> based on Mogan Research v1.2.9.3 LTS
 
 ## How to develop
 First of all, you need to learn about the TEXMACS_HOME_PATH:
