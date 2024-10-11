@@ -24,7 +24,7 @@ jobs:
 
       - name: Download and install MoganResearch
         run: |
-          wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.9.3-rc1/mogan-research-v1.2.9.3-rc1-debian12.deb -O /tmp/mogan-research.deb
+          wget https://github.com/XmacsLabs/mogan/releases/download/v1.2.9.3/mogan-research-v1.2.9.3-debian12.deb -O /tmp/mogan-research.deb
           DEBIAN_FRONTEND=noninteractive apt install -y /tmp/mogan-research.deb
 
       - name: Remove existing content in target directory

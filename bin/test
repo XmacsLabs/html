@@ -3,4 +3,5 @@
 /usr/bin/MoganResearch --version
 
 var name = $args[0]
+echo /usr/bin/MoganResearch --headless -b tests/$name.scm -x "("$name")" -q
 /usr/bin/MoganResearch --headless -b tests/$name.scm -x "("$name")" -q
