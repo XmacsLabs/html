@@ -52,8 +52,18 @@
   (check (shtml->stm '(a (@ (href "%60hello%20world%60")) "`how are you?`"))
          => '(hlink "\x00;how are you?\x00;" "%60hello%20world%60")))
 
+(define (regtest-htmltm-formatting)
+  (check (shtml->stm '(b "test")) => '(with "font-series" "bold" "test"))
+  (check (shtml->stm '(em "test")) => '(em "test"))
+  (check (shtml->stm '(i "test")) => '(with "font-shape" "italic" "test"))
+  (check (shtml->stm '(small "test")) => '(with "font-size" "0.83" "test"))
+  (check (shtml->stm '(strong "test")) => '(strong "test"))
+  (check (shtml->stm '("test" (sub "sub"))) => '(rsub "sub"))
+  (check (shtml->stm '("test" (sup "sup"))) => '(rsup "sup")))
+
 (tm-define (htmltm-test)
   (regtest-htmltm-headings)
   (regtest-htmltm-grouping)
   (regtest-htmltm-quote)
+  (regtest-htmltm-formatting)
   (check-report))
