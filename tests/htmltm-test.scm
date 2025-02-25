@@ -65,4 +65,5 @@
   (regtest-htmltm-headings)
   (regtest-htmltm-grouping)
   (regtest-htmltm-quote)
+  (regtest-htmltm-formatting)
   (check-report))
